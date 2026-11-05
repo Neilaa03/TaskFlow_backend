@@ -4,6 +4,10 @@ import com.example.TaskManager.entity.enums.UserRole;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 
 @Entity 
@@ -27,7 +31,20 @@ public class User {
     @Column(nullable = false)
     private UserRole role;
 
+    // Many-to-Many: A user can participate in multiple projects
+    @ManyToMany 
+    @JoinTable(
+        name = "user_projects",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "project_id")
+    )
+    private Set<Project> projects = new HashSet<>();
 
+    // One-to-Many: A user can be assigned multiple tasks
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>();       //list conserves order
+
+        //mappedby refers to the field name of the other entity
     public User() {}
 
     public User(String name, String email, String password, UserRole role) {

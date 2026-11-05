@@ -355,7 +355,7 @@ The project is being developed progressively, with the following objectives:
 - [x] Implement user creation.
 - [x] Complete CRUD operations for all entities.
 - [x] Implement DTOs and input validation.
-- [ ] Define entity relationships.
+- [x] Define entity relationships.
 - [ ] Implement business logic.
 - [ ] Add centralized exception handling.
 - [ ] Implement Spring Security and JWT authentication.

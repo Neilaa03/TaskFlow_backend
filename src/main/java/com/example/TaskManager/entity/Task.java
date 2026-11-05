@@ -27,6 +27,16 @@ public class Task {
     @Column(nullable = false)
     private Priority priority;
 
+    // Many-to-One: Multiple tasks can belong to one project
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
+
+    // Many-to-One: Multiple tasks can be assigned to one user
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     private LocalDate dueDate;
 
     public Task() {}

@@ -7,7 +7,6 @@ import com.example.TaskManager.dto.user.CreateUserDTO;
 import com.example.TaskManager.dto.user.UpdateUserDTO;
 import com.example.TaskManager.dto.user.PatchUserDTO;
 import com.example.TaskManager.dto.user.UserResponseDTO;
-import com.example.TaskManager.entity.User;
 import com.example.TaskManager.service.UserService;
 
 import java.util.List;

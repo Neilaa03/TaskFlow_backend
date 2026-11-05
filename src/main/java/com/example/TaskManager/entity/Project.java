@@ -3,6 +3,12 @@ package com.example.TaskManager.entity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+
 @Entity 
 @Table(name="projects") 
 public class Project {
@@ -18,6 +24,14 @@ public class Project {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    // One-to-Many: A project can contain multiple tasks
+    @OneToMany(mappedBy= "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>();
+
+    // Many-to-Many: A project can have multiple users
+    @ManyToMany(mappedBy = "projects")      // refers to the "projects" field in the User entity
+    private Set<User> users = new HashSet<>();
 
     @PrePersist
     private void setCreatedAtIfMissing() {
