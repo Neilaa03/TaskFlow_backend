@@ -3,6 +3,9 @@ package com.example.TaskManager.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.TaskManager.dto.user.CreateUserDTO;
+import com.example.TaskManager.dto.user.UpdateUserDTO;
+import com.example.TaskManager.dto.user.UserResponseDTO;
 import com.example.TaskManager.entity.User;
 import com.example.TaskManager.service.UserService;
 
@@ -21,17 +24,17 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
+    public List<UserResponseDTO> getUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
+    public UserResponseDTO getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
     
     @PostMapping
-    public User postMethodName(@RequestBody User user) {
+    public UserResponseDTO postMethodName(@RequestBody CreateUserDTO user) {
         if (user.getName() == null || user.getName().isBlank()
             || user.getEmail() == null || user.getEmail().isBlank()
             || user.getPassword() == null || user.getPassword().isBlank()) 
@@ -42,7 +45,7 @@ public class UserController {
     }       
     
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+    public UserResponseDTO updateUser(@PathVariable Long id, @RequestBody UpdateUserDTO user) {
         if (user.getName() == null || user.getName().isBlank()
             || user.getEmail() == null || user.getEmail().isBlank()
             || user.getPassword() == null || user.getPassword().isBlank()) 
@@ -53,7 +56,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public User patchUser(@PathVariable Long id, @RequestBody User user) {
+    public UserResponseDTO patchUser(@PathVariable Long id, @RequestBody UpdateUserDTO user) {
         return userService.patchUser(id, user);
     }
    

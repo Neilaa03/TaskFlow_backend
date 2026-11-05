@@ -1,6 +1,8 @@
 package com.example.TaskManager.controller;
 
-import com.example.TaskManager.entity.Task;
+import com.example.TaskManager.dto.task.CreateTaskDTO;
+import com.example.TaskManager.dto.task.TaskResponseDTO;
+import com.example.TaskManager.dto.task.UpdateTaskDTO;
 import com.example.TaskManager.service.TaskService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -18,29 +20,29 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getTasks() {
+    public List<TaskResponseDTO> getTasks() {
         return taskService.getAllTasks();
     }
 
     @GetMapping("/{id}")
-    public Task getTaskById(@PathVariable Long id) {
+    public TaskResponseDTO getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
 
     @PostMapping
-    public Task createTask(@RequestBody Task task) {
+    public TaskResponseDTO createTask(@RequestBody CreateTaskDTO task) {
         validateTask(task, true);
         return taskService.createTask(task);
     }
 
     @PutMapping("/{id}")
-    public Task updateTask(@PathVariable Long id, @RequestBody Task task) {
+    public TaskResponseDTO updateTask(@PathVariable Long id, @RequestBody UpdateTaskDTO task) {
         validateTask(task, true);
         return taskService.updateTask(id, task);
     }
 
     @PatchMapping("/{id}")
-    public Task patchTask(@PathVariable Long id, @RequestBody Task task) {
+    public TaskResponseDTO patchTask(@PathVariable Long id, @RequestBody UpdateTaskDTO task) {
         return taskService.patchTask(id, task);
     }
 
@@ -50,7 +52,14 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    private void validateTask(Task task, boolean requireAll) {
+    private void validateTask(CreateTaskDTO task, boolean requireAll) {
+        if (task.getTitle() == null || task.getTitle().isBlank()
+                || (requireAll && (task.getStatus() == null || task.getPriority() == null))) {
+            throw new IllegalArgumentException("Title, status, and priority are required");
+        }
+    }
+
+    private void validateTask(UpdateTaskDTO task, boolean requireAll) {
         if (task.getTitle() == null || task.getTitle().isBlank()
                 || (requireAll && (task.getStatus() == null || task.getPriority() == null))) {
             throw new IllegalArgumentException("Title, status, and priority are required");

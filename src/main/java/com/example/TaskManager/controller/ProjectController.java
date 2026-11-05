@@ -1,7 +1,9 @@
 package com.example.TaskManager.controller;
 
 
-import com.example.TaskManager.entity.Project;
+import com.example.TaskManager.dto.project.CreateProjectDTO;
+import com.example.TaskManager.dto.project.ProjectResponseDTO;
+import com.example.TaskManager.dto.project.UpdateProjectDTO;
 import com.example.TaskManager.service.ProjectService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -19,29 +21,29 @@ public class ProjectController {
     }
 
     @GetMapping
-    public List<Project> getProjects() {
+    public List<ProjectResponseDTO> getProjects() {
         return projectService.getAllProjects();
     }
 
     @GetMapping("/{id}")
-    public Project getProjectById(@PathVariable Long id) {
+    public ProjectResponseDTO getProjectById(@PathVariable Long id) {
         return projectService.getProjectById(id);
     }
 
     @PostMapping
-    public Project createProject(@RequestBody Project project) {
-        requireTitle(project);
+    public ProjectResponseDTO createProject(@RequestBody CreateProjectDTO project) {
+        requireTitle(project.getTitle());
         return projectService.createProject(project);
     }
 
     @PutMapping("/{id}")
-    public Project updateProject(@PathVariable Long id, @RequestBody Project project) {
-        requireTitle(project);
+    public ProjectResponseDTO updateProject(@PathVariable Long id, @RequestBody UpdateProjectDTO project) {
+        requireTitle(project.getTitle());
         return projectService.updateProject(id, project);
     }
 
     @PatchMapping("/{id}")
-    public Project patchProject(@PathVariable Long id, @RequestBody Project project) {
+    public ProjectResponseDTO patchProject(@PathVariable Long id, @RequestBody UpdateProjectDTO project) {
         return projectService.patchProject(id, project);
     }
 
@@ -51,8 +53,8 @@ public class ProjectController {
         return ResponseEntity.noContent().build();
     }
 
-    private void requireTitle(Project project) {
-        if (project.getTitle() == null || project.getTitle().isBlank()) {
+    private void requireTitle(String title) {
+        if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("Title cannot be empty");
         }
     }
