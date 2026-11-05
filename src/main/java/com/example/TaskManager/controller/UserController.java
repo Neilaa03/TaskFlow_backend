@@ -7,6 +7,8 @@ import com.example.TaskManager.dto.user.CreateUserDTO;
 import com.example.TaskManager.dto.user.UpdateUserDTO;
 import com.example.TaskManager.dto.user.PatchUserDTO;
 import com.example.TaskManager.dto.user.UserResponseDTO;
+import com.example.TaskManager.dto.project.ProjectResponseDTO;
+import com.example.TaskManager.dto.task.TaskResponseDTO;
 import com.example.TaskManager.service.UserService;
 
 import java.util.List;
@@ -31,6 +33,16 @@ public class UserController {
     @GetMapping("/{id}")
     public UserResponseDTO getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
+    }
+
+    @GetMapping("/{id}/projects")
+    public List<ProjectResponseDTO> getUserProjects(@PathVariable Long id) {
+        return userService.getUserProjects(id);
+    }
+
+    @GetMapping("/{id}/tasks")
+    public List<TaskResponseDTO> getUserTasks(@PathVariable Long id) {
+        return userService.getUserTasks(id);
     }
     
     @PostMapping

@@ -42,13 +42,27 @@ public class Task {
     public Task() {}
 
     public Task(String title, String description,
-                TaskStatus status, Priority priority,
-                LocalDate dueDate) {
+                Priority priority, LocalDate dueDate) {
         this.title = title;
         this.description = description;
-        this.status = status;
         this.priority = priority;
         this.dueDate = dueDate;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     // Getters et setters

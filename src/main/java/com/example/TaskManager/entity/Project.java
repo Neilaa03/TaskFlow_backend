@@ -26,7 +26,7 @@ public class Project {
     private LocalDateTime createdAt;
 
     // One-to-Many: A project can contain multiple tasks
-    @OneToMany(mappedBy= "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy= "project", cascade = CascadeType.ALL)
     private List<Task> tasks = new ArrayList<>();
 
     // Many-to-Many: A project can have multiple users
@@ -44,6 +44,40 @@ public class Project {
         this.title = title;
         this.description = description;
         this.createdAt = LocalDateTime.now();
+    }
+
+    // Task management methods
+    public void addTask(Task task) {
+        if (task == null) return;
+        if (!tasks.contains(task)) tasks.add(task);
+        task.setProject(this);
+    }
+
+    public void removeTask(Task task) {
+        if (task == null) return;
+        tasks.remove(task);
+        if (task.getProject() == this) task.setProject(null);
+    }
+
+    // User management methods
+    public Set<User> getUsers() {
+        return users;
+    }
+    
+    public void addUser(User user) {
+        if (user == null) return;
+        users.add(user);
+        if (!user.getProjects().contains(this)) user.getProjects().add(this);
+    }
+
+    public void removeUser(User user) {
+        if (user == null) return;
+        users.remove(user);
+        user.getProjects().remove(this);
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
     }
 
     // Getters et setters

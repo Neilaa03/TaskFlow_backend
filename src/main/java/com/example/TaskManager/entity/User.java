@@ -41,7 +41,7 @@ public class User {
     private Set<Project> projects = new HashSet<>();
 
     // One-to-Many: A user can be assigned multiple tasks
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<Task> tasks = new ArrayList<>();       //list conserves order
 
         //mappedby refers to the field name of the other entity
@@ -52,6 +52,37 @@ public class User {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    //Project management methods
+    public Set<Project> getProjects() {
+        return projects;
+    }
+    public void addProject(Project project) {
+        if (project == null) return;
+        projects.add(project);
+        if (!project.getUsers().contains(this)) project.getUsers().add(this);
+    }
+
+    public void removeProject(Project project) {
+        if (project == null) return;
+        projects.remove(project);
+        if (project.getUsers().contains(this)) project.getUsers().remove(this);
+    }
+
+    //Task management methods
+    public List<Task> getTasks() {
+        return tasks;
+    }
+    public void addTask(Task task) {
+        if (task == null) return;
+        if (!tasks.contains(task)) tasks.add(task);
+        task.setUser(this);
+    }
+    public void removeTask(Task task) {
+        if (task == null) return;
+        tasks.remove(task);
+        if (task.getUser() == this) task.setUser(null);
     }
 
     // Getters and Setters

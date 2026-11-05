@@ -7,6 +7,7 @@ import com.example.TaskManager.dto.task.PatchTaskDTO;
 import com.example.TaskManager.service.TaskService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -31,19 +32,17 @@ public class TaskController {
     }
 
     @PostMapping
-    public TaskResponseDTO createTask(@RequestBody CreateTaskDTO task) {
-        validateTask(task, true);
+    public TaskResponseDTO createTask(@Valid @RequestBody CreateTaskDTO task) {
         return taskService.createTask(task);
     }
 
     @PutMapping("/{id}")
-    public TaskResponseDTO updateTask(@PathVariable Long id, @RequestBody UpdateTaskDTO task) {
-        validateTask(task, true);
+    public TaskResponseDTO updateTask(@PathVariable Long id, @Valid @RequestBody UpdateTaskDTO task) {
         return taskService.updateTask(id, task);
     }
 
     @PatchMapping("/{id}")
-    public TaskResponseDTO patchTask(@PathVariable Long id, @RequestBody PatchTaskDTO task) {
+    public TaskResponseDTO patchTask(@PathVariable Long id, @Valid @RequestBody PatchTaskDTO task) {
         return taskService.patchTask(id, task);
     }
 
@@ -53,17 +52,4 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    private void validateTask(CreateTaskDTO task, boolean requireAll) {
-        if (task.getTitle() == null || task.getTitle().isBlank()
-                || (requireAll && (task.getStatus() == null || task.getPriority() == null))) {
-            throw new IllegalArgumentException("Title, status, and priority are required");
-        }
-    }
-
-    private void validateTask(UpdateTaskDTO task, boolean requireAll) {
-        if (task.getTitle() == null || task.getTitle().isBlank()
-                || (requireAll && (task.getStatus() == null || task.getPriority() == null))) {
-            throw new IllegalArgumentException("Title, status, and priority are required");
-        }
-    }
 }

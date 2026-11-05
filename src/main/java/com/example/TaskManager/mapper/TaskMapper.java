@@ -12,7 +12,7 @@ import com.example.TaskManager.entity.Task;
 public class TaskMapper {
 
     public Task toEntity(CreateTaskDTO dto) {
-        return new Task(dto.getTitle(), dto.getDescription(), dto.getStatus(),
+        return new Task(dto.getTitle(), dto.getDescription(),
                 dto.getPriority(), dto.getDueDate());
     }
 
@@ -34,6 +34,8 @@ public class TaskMapper {
 
     public TaskResponseDTO toResponseDTO(Task task) {
         return new TaskResponseDTO(task.getId(), task.getTitle(), task.getDescription(),
-                task.getStatus(), task.getPriority(), task.getDueDate());
+                task.getStatus(), task.getPriority(), task.getDueDate(),
+                task.getProject() == null ? null : task.getProject().getId(),
+                task.getUser() == null ? null : task.getUser().getId());
     }
 }

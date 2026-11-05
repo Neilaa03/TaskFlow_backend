@@ -5,9 +5,12 @@ import com.example.TaskManager.dto.project.CreateProjectDTO;
 import com.example.TaskManager.dto.project.ProjectResponseDTO;
 import com.example.TaskManager.dto.project.UpdateProjectDTO;
 import com.example.TaskManager.dto.project.PatchProjectDTO;
+import com.example.TaskManager.dto.task.TaskResponseDTO;
+import com.example.TaskManager.dto.user.UserResponseDTO;
 import com.example.TaskManager.service.ProjectService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -31,20 +34,28 @@ public class ProjectController {
         return projectService.getProjectById(id);
     }
 
+    @GetMapping("/{id}/tasks")
+    public List<TaskResponseDTO> getProjectTasks(@PathVariable Long id) {
+        return projectService.getProjectTasks(id);
+    }
+
+    @GetMapping("/{id}/members")
+    public List<UserResponseDTO> getProjectMembers(@PathVariable Long id) {
+        return projectService.getProjectMembers(id);
+    }
+
     @PostMapping
-    public ProjectResponseDTO createProject(@RequestBody CreateProjectDTO project) {
-        requireTitle(project.getTitle());
+    public ProjectResponseDTO createProject(@Valid @RequestBody CreateProjectDTO project) {
         return projectService.createProject(project);
     }
 
     @PutMapping("/{id}")
-    public ProjectResponseDTO updateProject(@PathVariable Long id, @RequestBody UpdateProjectDTO project) {
-        requireTitle(project.getTitle());
+    public ProjectResponseDTO updateProject(@PathVariable Long id, @Valid @RequestBody UpdateProjectDTO project) {
         return projectService.updateProject(id, project);
     }
 
     @PatchMapping("/{id}")
-    public ProjectResponseDTO patchProject(@PathVariable Long id, @RequestBody PatchProjectDTO project) {
+    public ProjectResponseDTO patchProject(@PathVariable Long id, @Valid @RequestBody PatchProjectDTO project) {
         return projectService.patchProject(id, project);
     }
 
@@ -54,9 +65,22 @@ public class ProjectController {
         return ResponseEntity.noContent().build();
     }
 
-    private void requireTitle(String title) {
-        if (title == null || title.isBlank()) {
-            throw new IllegalArgumentException("Title cannot be empty");
-        }
+    // Member management endpoints
+    @PostMapping("/{projectId}/members/{userId}")
+    public ResponseEntity<Void> addMember(
+            @PathVariable Long projectId,
+            @PathVariable Long userId) {
+
+        projectService.addMember(projectId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{projectId}/members/{userId}")
+    public ResponseEntity<Void> removeMember(
+            @PathVariable Long projectId,
+            @PathVariable Long userId) {
+
+        projectService.removeMember(projectId, userId);
+        return ResponseEntity.noContent().build();
     }
 }

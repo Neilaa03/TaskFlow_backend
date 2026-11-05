@@ -5,8 +5,13 @@ import com.example.TaskManager.dto.user.UserResponseDTO;
 import com.example.TaskManager.dto.user.CreateUserDTO;
 import com.example.TaskManager.dto.user.UpdateUserDTO;
 import com.example.TaskManager.dto.user.PatchUserDTO;
+import com.example.TaskManager.dto.project.ProjectResponseDTO;
+import com.example.TaskManager.dto.task.TaskResponseDTO;
+import com.example.TaskManager.mapper.ProjectMapper;
+import com.example.TaskManager.mapper.TaskMapper;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.TaskManager.repository.UserRepository;
 import com.example.TaskManager.entity.User;
 import java.util.List;
@@ -15,10 +20,15 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final ProjectMapper projectMapper;
+    private final TaskMapper taskMapper;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, UserMapper userMapper,
+                       ProjectMapper projectMapper, TaskMapper taskMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.projectMapper = projectMapper;
+        this.taskMapper = taskMapper;
     }
 
     public List<UserResponseDTO> getAllUsers() {
@@ -34,11 +44,28 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException(
                         "User not found with id: " + id));
     }
+    public User getUserEntityById(Long id) {
+        return findUserEntityById(id);
+    }
 
     public UserResponseDTO getUserById(Long id) {
         //return userRepository.findById(id).orElse(null);
         User user = findUserEntityById(id);
         return userMapper.toResponseDTO(user);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProjectResponseDTO> getUserProjects(Long id) {
+        return findUserEntityById(id).getProjects().stream()
+                .map(projectMapper::toResponseDTO)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<TaskResponseDTO> getUserTasks(Long id) {
+        return findUserEntityById(id).getTasks().stream()
+                .map(taskMapper::toResponseDTO)
+                .toList();
     }
 
     public UserResponseDTO createUser(CreateUserDTO dto) {
@@ -75,8 +102,15 @@ public class UserService {
         return userMapper.toResponseDTO(userRepository.save(toUpdate));
     }
 
+    @Transactional
     public void deleteUser(Long id) {
         User toDelete = findUserEntityById(id);
+        for (var project : List.copyOf(toDelete.getProjects())) {
+            toDelete.removeProject(project);
+        }
+        for (var task : List.copyOf(toDelete.getTasks())) {
+            toDelete.removeTask(task);
+        }
         userRepository.delete(toDelete);
     }
 }
