@@ -18,13 +18,10 @@ The application follows a layered architecture to ensure separation of concerns,
 - RESTful API architecture.
 - User, Project, and Task entities.
 - Database persistence using Spring Data JPA.
-- CRUD foundations for managing application resources.
+- CRUD endpoints for users, projects, and tasks, including partial updates.
 - Layered architecture (Controller, Service, Repository).
-- REST endpoints for retrieving users, projects, and tasks.
-- User creation endpoint.
 
 ### Planned Features
-- Complete CRUD operations for users, projects, and tasks.
 - User roles and access management (USER, MANAGER, ADMIN).
 - Task assignment and project membership.
 - Task status and priority management.
@@ -159,13 +156,13 @@ Represents an individual task within the application.
 | title | String | Task title |
 | description | String | Task description |
 | status | TaskStatus | Current task status |
-| priority | TaskPriority | Task priority |
+| priority | Priority | Task priority |
 | dueDate | LocalDate | Task deadline |
 
 Available statuses:
-- `TODO`
+- `PENDING`
 - `IN_PROGRESS`
-- `DONE`
+- `COMPLETED`
 
 Available priorities:
 - `LOW`
@@ -183,6 +180,9 @@ Base URL: `http://localhost:8080`
 | GET | `/api/users` | Retrieve all users |
 | GET | `/api/users/{id}` | Retrieve a user by ID |
 | POST | `/api/users` | Create a new user |
+| PUT | `/api/users/{id}` | Replace a user's name, email, and password |
+| PATCH | `/api/users/{id}` | Update supplied non-empty name, email, and/or password |
+| DELETE | `/api/users/{id}` | Delete a user; returns `204 No Content` |
 
 ### Projects
 
@@ -190,6 +190,10 @@ Base URL: `http://localhost:8080`
 |---|---|---|
 | GET | `/api/projects` | Retrieve all projects |
 | GET | `/api/projects/{id}` | Retrieve a project by ID |
+| POST | `/api/projects` | Create a project (title required; `createdAt` is set automatically) |
+| PUT | `/api/projects/{id}` | Replace a project's title and description |
+| PATCH | `/api/projects/{id}` | Update the supplied title and/or non-null description |
+| DELETE | `/api/projects/{id}` | Delete a project; returns `204 No Content` |
 
 ### Tasks
 
@@ -197,8 +201,53 @@ Base URL: `http://localhost:8080`
 |---|---|---|
 | GET | `/api/tasks` | Retrieve all tasks |
 | GET | `/api/tasks/{id}` | Retrieve a task by ID |
+| POST | `/api/tasks` | Create a task (title, status, and priority required) |
+| PUT | `/api/tasks/{id}` | Replace a task's title, description, status, priority, and due date |
+| PATCH | `/api/tasks/{id}` | Update the supplied non-null task fields |
+| DELETE | `/api/tasks/{id}` | Delete a task; returns `204 No Content` |
 
-Additional endpoints for updating and deleting resources will be implemented as the project evolves.
+For POST and PUT, send a JSON request body. PATCH applies the non-null fields provided. Resource IDs are numeric. A request for a missing resource currently results in a `RuntimeException` from the service layer.
+
+Example project request:
+
+```json
+{
+  "title": "Website redesign",
+  "description": "Refresh the company website"
+}
+```
+
+Example task request:
+
+```json
+{
+  "title": "Create landing page",
+  "description": "Build the first page of the redesign",
+  "status": "PENDING",
+  "priority": "HIGH",
+  "dueDate": "2026-12-01"
+}
+```
+
+Example partial update:
+
+```http
+PATCH http://localhost:8080/api/tasks/1
+Content-Type: application/json
+```
+
+```json
+{
+  "status": "IN_PROGRESS"
+}
+```
+
+### General
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/home` | Return a welcome message |
+| GET | `/api/info` | Return an informational message |
 
 ## Getting Started
 
@@ -214,7 +263,7 @@ Make sure you have installed:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/task-manager-api.git
+git clone https://github.com/Neilaa03/task-manager-api.git
 ```
 
 ```bash
@@ -304,7 +353,7 @@ The project is being developed progressively, with the following objectives:
 - [x] Implement service and controller layers.
 - [x] Implement basic GET endpoints.
 - [x] Implement user creation.
-- [ ] Complete CRUD operations for all entities.
+- [x] Complete CRUD operations for all entities.
 - [ ] Implement DTOs and input validation.
 - [ ] Define entity relationships.
 - [ ] Implement business logic.
