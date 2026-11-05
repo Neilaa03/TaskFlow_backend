@@ -354,7 +354,7 @@ The project is being developed progressively, with the following objectives:
 - [x] Implement basic GET endpoints.
 - [x] Implement user creation.
 - [x] Complete CRUD operations for all entities.
-- [ ] Implement DTOs and input validation.
+- [x] Implement DTOs and input validation.
 - [ ] Define entity relationships.
 - [ ] Implement business logic.
 - [ ] Add centralized exception handling.

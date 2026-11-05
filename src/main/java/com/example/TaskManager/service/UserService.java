@@ -4,6 +4,7 @@ import com.example.TaskManager.mapper.UserMapper;
 import com.example.TaskManager.dto.user.UserResponseDTO;
 import com.example.TaskManager.dto.user.CreateUserDTO;
 import com.example.TaskManager.dto.user.UpdateUserDTO;
+import com.example.TaskManager.dto.user.PatchUserDTO;
 
 import org.springframework.stereotype.Service;
 import com.example.TaskManager.repository.UserRepository;
@@ -55,7 +56,7 @@ public class UserService {
         return userMapper.toResponseDTO(userRepository.save(toUpdate));
     }
 
-    public UserResponseDTO patchUser(Long id, UpdateUserDTO patchedUser) {
+    public UserResponseDTO patchUser(Long id, PatchUserDTO patchedUser) {
         User toUpdate = findUserEntityById(id);
 
         if (patchedUser.getName() != null && !patchedUser.getName().isBlank()) {
@@ -66,6 +67,9 @@ public class UserService {
         }
         if (patchedUser.getPassword() != null && !patchedUser.getPassword().isBlank()) {
             toUpdate.setPassword(patchedUser.getPassword());
+        }
+        if (patchedUser.getRole() != null) {
+            toUpdate.setRole(patchedUser.getRole());
         }
 
         return userMapper.toResponseDTO(userRepository.save(toUpdate));

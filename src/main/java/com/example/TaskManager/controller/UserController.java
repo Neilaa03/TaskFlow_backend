@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.TaskManager.dto.user.CreateUserDTO;
 import com.example.TaskManager.dto.user.UpdateUserDTO;
+import com.example.TaskManager.dto.user.PatchUserDTO;
 import com.example.TaskManager.dto.user.UserResponseDTO;
 import com.example.TaskManager.entity.User;
 import com.example.TaskManager.service.UserService;
@@ -56,7 +57,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public UserResponseDTO patchUser(@PathVariable Long id, @RequestBody UpdateUserDTO user) {
+    public UserResponseDTO patchUser(@PathVariable Long id, @RequestBody PatchUserDTO user) {
         return userService.patchUser(id, user);
     }
    

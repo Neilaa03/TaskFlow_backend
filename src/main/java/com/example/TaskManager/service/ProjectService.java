@@ -7,6 +7,7 @@ import com.example.TaskManager.mapper.ProjectMapper;
 import com.example.TaskManager.dto.project.CreateProjectDTO;
 import com.example.TaskManager.dto.project.UpdateProjectDTO;
 import com.example.TaskManager.dto.project.ProjectResponseDTO;
+import com.example.TaskManager.dto.project.PatchProjectDTO;
 import java.util.List;
 
 @Service
@@ -44,8 +45,10 @@ public class ProjectService {
         return projectMapper.toResponseDTO(projectRepository.save(project));
     }
 
-    public ProjectResponseDTO patchProject(Long id, UpdateProjectDTO dto) {
-        return updateProject(id, dto);
+    public ProjectResponseDTO patchProject(Long id, PatchProjectDTO dto) {
+        Project project = findProjectEntityById(id);
+        projectMapper.patchEntity(project, dto);
+        return projectMapper.toResponseDTO(projectRepository.save(project));
     }
 
     public void deleteProject(Long id) {

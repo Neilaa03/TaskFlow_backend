@@ -4,6 +4,7 @@ package com.example.TaskManager.controller;
 import com.example.TaskManager.dto.project.CreateProjectDTO;
 import com.example.TaskManager.dto.project.ProjectResponseDTO;
 import com.example.TaskManager.dto.project.UpdateProjectDTO;
+import com.example.TaskManager.dto.project.PatchProjectDTO;
 import com.example.TaskManager.service.ProjectService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class ProjectController {
     }
 
     @PatchMapping("/{id}")
-    public ProjectResponseDTO patchProject(@PathVariable Long id, @RequestBody UpdateProjectDTO project) {
+    public ProjectResponseDTO patchProject(@PathVariable Long id, @RequestBody PatchProjectDTO project) {
         return projectService.patchProject(id, project);
     }
 

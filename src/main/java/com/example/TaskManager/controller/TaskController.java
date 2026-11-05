@@ -3,6 +3,7 @@ package com.example.TaskManager.controller;
 import com.example.TaskManager.dto.task.CreateTaskDTO;
 import com.example.TaskManager.dto.task.TaskResponseDTO;
 import com.example.TaskManager.dto.task.UpdateTaskDTO;
+import com.example.TaskManager.dto.task.PatchTaskDTO;
 import com.example.TaskManager.service.TaskService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,7 @@ public class TaskController {
     }
 
     @PatchMapping("/{id}")
-    public TaskResponseDTO patchTask(@PathVariable Long id, @RequestBody UpdateTaskDTO task) {
+    public TaskResponseDTO patchTask(@PathVariable Long id, @RequestBody PatchTaskDTO task) {
         return taskService.patchTask(id, task);
     }
 
